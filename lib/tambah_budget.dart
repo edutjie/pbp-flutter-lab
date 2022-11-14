@@ -2,6 +2,7 @@ import 'package:counter_7/main.dart';
 import 'package:counter_7/data_budget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:counter_7/drawer.dart';
 import 'globals.dart' as globals;
 
 class TambahBudgetPage extends StatefulWidget {
@@ -15,9 +16,10 @@ class Budget {
   late String judul;
   late int nominal;
   late String jenisBudget;
+  late DateTime date;
 
   Budget(
-      {required this.judul, required this.nominal, required this.jenisBudget});
+      {required this.judul, required this.nominal, required this.jenisBudget, required this.date});
 }
 
 class _TambahBudgetPageState extends State<TambahBudgetPage> {
@@ -26,10 +28,11 @@ class _TambahBudgetPageState extends State<TambahBudgetPage> {
   int? nominal;
   String? jenisBudget;
   List<String> listJenisBudget = ['Pemasukan', 'Pengeluaran'];
+  DateTime date = DateTime.now();
 
   onPressed(BuildContext context) {
     var data =
-        Budget(judul: _judul!, nominal: nominal!, jenisBudget: jenisBudget!);
+        Budget(judul: _judul!, nominal: nominal!, jenisBudget: jenisBudget!, date: date);
     globals.budgets.add(data);
     Navigator.pushReplacement(
       context,
@@ -43,47 +46,7 @@ class _TambahBudgetPageState extends State<TambahBudgetPage> {
       appBar: AppBar(
         title: Text('Form Budget'),
       ),
-      drawer: Drawer(
-        child: Column(
-          children: [
-            // Menambahkan clickable menu
-            ListTile(
-              title: const Text('counter_7'),
-              onTap: () {
-                // Route menu ke halaman utama
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          const MyHomePage(title: 'counter_7')),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Tambah Budget'),
-              onTap: () {
-                // Route menu ke halaman tambah budget
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const TambahBudgetPage()),
-                );
-              },
-            ),
-            ListTile(
-              title: const Text('Data Budget'),
-              onTap: () {
-                // Route menu ke halaman data budget
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const DataBudgetPage()),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
+      drawer: const DrawerApp(),
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -162,6 +125,26 @@ class _TambahBudgetPageState extends State<TambahBudgetPage> {
                         return 'Nominal tidak boleh kosong!';
                       }
                       return null;
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: Text(date.toString()),
+                  leading: TextButton.icon(
+                    icon: const Icon(Icons.calendar_today),
+                    label: const Text("Pilih Tanggal"),
+                    onPressed: () {
+                      showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2099),
+                      ).then((date) {
+                        //tambahkan setState dan panggil variabel _dateTime.
+                        setState(() {
+                          this.date = date!;
+                        });
+                      });
                     },
                   ),
                 ),
