@@ -1,6 +1,7 @@
 import 'package:counter_7/main.dart';
 import 'package:counter_7/tambah_budget.dart';
 import 'package:flutter/material.dart';
+import 'globals.dart' as globals;
 
 class DataBudgetPage extends StatefulWidget {
   const DataBudgetPage({super.key});
@@ -10,8 +11,6 @@ class DataBudgetPage extends StatefulWidget {
 }
 
 class _DataBudgetState extends State<DataBudgetPage> {
-  List<ListTile> items = [];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +29,7 @@ class _DataBudgetState extends State<DataBudgetPage> {
                   context,
                   MaterialPageRoute(
                       builder: (context) =>
-                          const MyHomePage(title: 'counter_7')),
+                      const MyHomePage(title: 'counter_7')),
                 );
               },
             ),
@@ -60,16 +59,16 @@ class _DataBudgetState extends State<DataBudgetPage> {
         ),
       ),
       body: Center(
-        child: ListView(
-          children: const [
-            ListTile(
-              title: Text('Text'),
-              subtitle: Text('Text'),
-              trailing: Text('Pemasukan'),
-            )
-          ],
-        )
-      ),
+          child: ListView.builder(
+            itemCount: globals.budgets.length,
+            itemBuilder: ((context, index) {
+              return ListTile(
+                title: Text(globals.budgets[index].judul),
+                subtitle: Text(globals.budgets[index].nominal.toString()),
+                trailing: Text(globals.budgets[index].jenisBudget),
+              );
+            }),
+          )),
     );
   }
 }

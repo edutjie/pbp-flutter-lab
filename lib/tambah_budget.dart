@@ -2,6 +2,7 @@ import 'package:counter_7/main.dart';
 import 'package:counter_7/data_budget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'globals.dart' as globals;
 
 class TambahBudgetPage extends StatefulWidget {
   const TambahBudgetPage({super.key});
@@ -10,12 +11,31 @@ class TambahBudgetPage extends StatefulWidget {
   State<TambahBudgetPage> createState() => _TambahBudgetPageState();
 }
 
+class Budget {
+  late String judul;
+  late int nominal;
+  late String jenisBudget;
+
+  Budget(
+      {required this.judul, required this.nominal, required this.jenisBudget});
+}
+
 class _TambahBudgetPageState extends State<TambahBudgetPage> {
   final _formKey = GlobalKey<FormState>();
   String? _judul;
   int? nominal;
   String? jenisBudget;
   List<String> listJenisBudget = ['Pemasukan', 'Pengeluaran'];
+
+  onPressed(BuildContext context) {
+    var data =
+        Budget(judul: _judul!, nominal: nominal!, jenisBudget: jenisBudget!);
+    globals.budgets.add(data);
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const DataBudgetPage()),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +199,42 @@ class _TambahBudgetPageState extends State<TambahBudgetPage> {
                         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         alignment: Alignment.center),
                     onPressed: () {
-                      if (_formKey.currentState!.validate()) {}
+                      if (_formKey.currentState!.validate()) {
+                        if (jenisBudget == null || jenisBudget == '') {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return Dialog(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                elevation: 15,
+                                child: Container(
+                                  child: ListView(
+                                    padding: const EdgeInsets.only(
+                                        top: 20, bottom: 20),
+                                    shrinkWrap: true,
+                                    children: <Widget>[
+                                      const Center(
+                                          child: Text(
+                                              'Pilih Jenis tidak boleh kosong')),
+                                      const SizedBox(height: 20),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text('Kembali'),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        } else {
+                          onPressed(context);
+                        }
+                      }
                     },
                     child: const Text(
                       "Simpan",
