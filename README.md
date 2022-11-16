@@ -101,7 +101,7 @@ When we navigate to another screen, we use the `push` methods and `Navigator`
 2. Make a form that accepts `String judul`, `int nominal`, `String jenisBudget` and `date` as the inputs in `tambah_budget.dart`.
 3. Make a `Budget` class in `tambah_budget.dart` that accepts the same inputs as the form.
    ```dart
-   	class Budget {
+	class Budget {
 		late String judul;
 		late int nominal;
 		late String jenisBudget;
