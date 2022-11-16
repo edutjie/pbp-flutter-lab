@@ -114,7 +114,7 @@ When we navigate to another screen, we use the `push` methods and `Navigator`
 			required this.date
 		});
 	}
-```
+	```
 4. Make `globals.dart` that contains global variable `budgets` which is a list of `Budget`.
    ```dart
 	// globals.dart
@@ -122,6 +122,6 @@ When we navigate to another screen, we use the `push` methods and `Navigator`
 	import 'package:counter_7/tambah_budget.dart';
 	
 	List<Budget> budgets = [];
-```
+	```
 4. Show the data in `globals.budgets` in `data_budget.dart` using `ListView.builder` that contains `ListTile`.
 5. Decorate.
