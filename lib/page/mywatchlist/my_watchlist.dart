@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:counter_7/page/drawer.dart';
-import 'package:counter_7/model/mywatchlist.dart';
-import 'package:counter_7/page/my_watchlist_detail.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:counter_7/page/mywatchlist/my_watchlist_detail.dart';
+import 'package:counter_7/utl/fetch_watchlist.dart';
 
 class MyWatchlistPage extends StatefulWidget {
   const MyWatchlistPage({super.key});
@@ -13,31 +11,6 @@ class MyWatchlistPage extends StatefulWidget {
 }
 
 class _MyWatchlistState extends State<MyWatchlistPage> {
-  Future<List<MyWatchlist>> fetchWatchlist() async {
-    var url =
-        Uri.parse('https://edutjie-pbp-2.herokuapp.com/mywatchlist/json/');
-    var response = await http.get(
-      url,
-      headers: {
-        "Access-Control-Allow-Origin": "*",
-        "Content-Type": "application/json",
-      },
-    );
-
-    // melakukan decode response menjadi bentuk json
-    var data = jsonDecode(utf8.decode(response.bodyBytes));
-
-    // melakukan konversi data json menjadi object MyWatchlist
-    List<MyWatchlist> listMyWatchlist = [];
-    for (var d in data) {
-      if (d != null) {
-        listMyWatchlist.add(MyWatchlist.fromJson(d));
-      }
-    }
-
-    return listMyWatchlist;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,6 +43,9 @@ class _MyWatchlistState extends State<MyWatchlistPage> {
                             child: Material(
                                 elevation: 2.0,
                                 borderRadius: BorderRadius.circular(5.0),
+                                color: snapshot.data![index].fields.watched
+                                    ? Colors.greenAccent
+                                    : Colors.deepOrangeAccent,
                                 shadowColor: Colors.blueGrey,
                                 child: ListTile(
                                   onTap: () {
@@ -77,13 +53,26 @@ class _MyWatchlistState extends State<MyWatchlistPage> {
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => MyWatchlistDetailPage(
+                                          builder: (context) =>
+                                              MyWatchlistDetailPage(
                                             movie: snapshot.data![index],
                                           ),
                                         ));
                                   },
                                   title:
                                       Text(snapshot.data![index].fields.title),
+                                  trailing: Checkbox(
+                                    activeColor: Colors.limeAccent,
+                                    checkColor: Colors.black,
+                                    focusColor: Colors.lightGreenAccent,
+                                    value: snapshot.data![index].fields.watched,
+                                    onChanged: (bool? value) {
+                                      setState(() {
+                                        snapshot.data![index].fields.watched =
+                                            value!;
+                                      });
+                                    },
+                                  ),
                                 )),
                           ));
                 }

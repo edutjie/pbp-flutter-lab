@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:counter_7/main.dart';
-import 'package:counter_7/page/tambah_budget.dart';
-import 'package:counter_7/page/data_budget.dart';
-import 'package:counter_7/page/my_watchlist.dart';
+import 'package:counter_7/page/budget/tambah_budget.dart';
+import 'package:counter_7/page/budget/data_budget.dart';
+import 'package:counter_7/page/mywatchlist/my_watchlist.dart';
 
 class DrawerApp extends StatelessWidget {
   const DrawerApp({super.key});
