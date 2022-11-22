@@ -125,3 +125,78 @@ When we navigate to another screen, we use the `push` methods and `Navigator`
 	```
 4. Show the data in `globals.budgets` in `data_budget.dart` using `ListView.builder` that contains `ListTile`.
 5. Decorate.
+
+
+# Assignment 9: Web Service Integration in Flutter
+
+## Can we fetch a JSON data without making a model first? If yes, is it better than making a model first?
+Yes, we can fetch a JSON data without making a model first. We can make a dynamic map from the JSON and access the value like a dictionary in python (`data[key]`). But it is not recommended as we wouldn't know if there is a missing field or the fields is not what we expect, so I'll be hard to manage and error-prone. That being said, it is obvious that it's not better than making a model first.
+
+## Widgets used in this assignment
+- `ListTile`: Used to populate a ListView in _Flutter_. It contains title as well as leading or trailing icons.
+- `Checkbox`: Used to make a clickable checkbox.
+- `TextButton`: It is a simple Button without any border that listens for _onPressed_ and _onLongPress_ gestures.
+- `FutureBuilder`: Widget that builds itself based on the latest snapshot of interaction with a Future.
+
+## How fetching data from json in flutter works
+Data is fetched using HTTP in `fetchWatchlist` function that call the get function by HTTP instances. The function returns the list of `MyWatchlist` object. `FutureBuilder` will call the function and wait for its response. When the data is fetched, `FutureBuilder` returns `ListView.builder` that builds `ListTiles` containing the mapped data that we get from `fetchWatchlist` function.
+
+## Implementation
+1. Create `mywatchlist.dart` and make a `MyWatchlist` class.
+2. Create `fetch_watchlist.dart` and make a function like this to fetch data from the API.
+   ```dart
+   // fetch_watchlist.dart
+	Future<List<MyWatchlist>> fetchWatchlist() async {
+		var url = Uri.parse('https://edutjie-pbp-2.herokuapp.com/mywatchlist/json/');
+
+		var response = await http.get(
+				url,
+				headers: {
+					"Access-Control-Allow-Origin": "*",
+					"Content-Type": "application/json",
+			},
+		);
+
+		// melakukan decode response menjadi bentuk json
+		var data = jsonDecode(utf8.decode(response.bodyBytes));
+
+		// melakukan konversi data json menjadi object MyWatchlist
+		List<MyWatchlist> listMyWatchlist = [];
+
+		for (var d in data) {
+			if (d != null) {
+				listMyWatchlist.add(MyWatchlist.fromJson(d));
+			}
+		}
+
+		return listMyWatchlist;
+	}
+	```
+3. Create `my_watchlist.dart` and make a `MyWatchlistPage StatefulWidget` that contains `FutureBuilder` that fetch data using `fetchWatchlist` function.
+4. Create `my_watchlist_detail.dart` and make a `MyWatchlistDetailPage StatelessWidget` that displays the data that is going to be pass from `MyWatchlistPage`.
+5. Pass data from  `MyWatchlistPage` to `MyWatchlistDetailPage` using `Navigator.push`.
+    ```dart
+	Navigator.push(
+		context,
+		MaterialPageRoute(
+		  builder: (context) =>
+			  MyWatchlistDetailPage(
+			movie: snapshot.data![index],
+		  ),
+		));
+	```
+6. Create `CheckBox` widget and its `onChanged` function for Bonus.
+    ```dart
+	Checkbox(
+		activeColor: Colors.limeAccent,
+		checkColor: Colors.black,
+		focusColor: Colors.lightGreenAccent,
+		value: snapshot.data![index].fields.watched,
+		onChanged: (bool? value) {
+		  setState(() {
+			snapshot.data![index].fields.watched =
+				value!;
+		  });
+		},
+	)
+	```
