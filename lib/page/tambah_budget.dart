@@ -1,25 +1,15 @@
-import 'package:counter_7/main.dart';
-import 'package:counter_7/data_budget.dart';
+import 'package:counter_7/page/data_budget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:counter_7/drawer.dart';
-import 'globals.dart' as globals;
+import 'package:counter_7/page/drawer.dart';
+import 'package:counter_7/model/budget.dart';
+import 'package:counter_7/globals.dart' as globals;
 
 class TambahBudgetPage extends StatefulWidget {
   const TambahBudgetPage({super.key});
 
   @override
   State<TambahBudgetPage> createState() => _TambahBudgetPageState();
-}
-
-class Budget {
-  late String judul;
-  late int nominal;
-  late String jenisBudget;
-  late DateTime date;
-
-  Budget(
-      {required this.judul, required this.nominal, required this.jenisBudget, required this.date});
 }
 
 class _TambahBudgetPageState extends State<TambahBudgetPage> {
@@ -31,8 +21,11 @@ class _TambahBudgetPageState extends State<TambahBudgetPage> {
   DateTime date = DateTime.now();
 
   onPressed(BuildContext context) {
-    var data =
-        Budget(judul: _judul!, nominal: nominal!, jenisBudget: jenisBudget!, date: date);
+    var data = Budget(
+        judul: _judul!,
+        nominal: nominal!,
+        jenisBudget: jenisBudget!,
+        date: date);
     globals.budgets.add(data);
     Navigator.pushReplacement(
       context,
